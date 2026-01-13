@@ -1,0 +1,26 @@
+[phases.setup]
+aptPkgs = [
+  "php81",
+  "php81-pdo",
+  "php81-pdo_mysql",
+  "php81-mysql",
+  "php81-mysqli",
+  "php81-mbstring",
+  "php81-xml",
+  "php81-curl",
+  "php81-zip"
+]
+
+[phases.install]
+cmds = [
+  "composer install --no-dev --optimize-autoloader"
+]
+
+[phases.build]
+cmds = [
+  "php artisan key:generate --force",
+  "php artisan config:cache"
+]
+
+[start]
+cmd = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
