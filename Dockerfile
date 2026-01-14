@@ -11,10 +11,8 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-# WAJIB: permission Laravel
 RUN chmod -R 775 storage bootstrap/cache
 
-RUN php artisan config:clear
-
 EXPOSE 8080
-CMD php artisan serve --host=0.0.0.0 --port=8080
+
+CMD php -S 0.0.0.0:8080 -t public
