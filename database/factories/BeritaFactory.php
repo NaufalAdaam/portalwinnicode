@@ -17,8 +17,11 @@ class BeritaFactory extends Factory
             'thumbnail_url' => 'https://placehold.co/800x600?text=Berita', // Gambar palsu
             'deskripsi_singkat' => $this->faker->paragraph(2), // 2 paragraf palsu
             'isi_berita' => $this->faker->paragraph(10), // 10 paragraf palsu
-            'is_headline' => $this->faker->boolean(80), // 20% kemungkinan jadi headline
-            'is_terpopuler' => $this->faker->boolean(80), // 30% kemungkinan populer
+            'status' => $this->faker->randomElement(['draft', 'pending', 'published']),
+            'published_at' => $this->faker->optional()->dateTime(), // nullable
+            'is_pinned' => $this->faker->boolean(20), // 20% kemungkinan di-pin
+            'is_headline' => $this->faker->boolean(30), // 30% kemungkinan jadi headline
+            'is_subheadline' => $this->faker->boolean(30), // 30% kemungkinan jadi sub-headline
             'views' => $this->faker->numberBetween(100, 5000),
         ];
     }
