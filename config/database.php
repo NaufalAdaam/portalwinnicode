@@ -2,6 +2,28 @@
 
 use Illuminate\Support\Str;
 
+// Helper function to parse DATABASE_URL
+function parseDatabaseUrl($url = null)
+{
+    if (! $url) {
+        return [];
+    }
+
+    $parsed = parse_url($url);
+    
+    return [
+        'driver' => $parsed['scheme'] ?? null,
+        'host' => $parsed['host'] ?? null,
+        'port' => $parsed['port'] ?? null,
+        'database' => ltrim($parsed['path'] ?? '', '/'),
+        'username' => $parsed['user'] ?? null,
+        'password' => $parsed['pass'] ?? null,
+    ];
+}
+
+$databaseUrl = env('DATABASE_URL');
+$urlParsed = $databaseUrl ? parseDatabaseUrl($databaseUrl) : [];
+
 return [
 
     /*
@@ -45,11 +67,12 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', $urlParsed['host'] ?? '127.0.0.1'),
+            'port' => env('DB_PORT', $urlParsed['port'] ?? '3306'),
+            'database' => env('DB_DATABASE', $urlParsed['database'] ?? 'forge'),
+            'username' => env('DB_USERNAME', $urlParsed['username'] ?? 'forge'),
+            'password' => env('DB_PASSWORD', $urlParsed['password'] ?? ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -65,11 +88,11 @@ return [
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host' => env('DB_HOST', $urlParsed['host'] ?? '127.0.0.1'),
+            'port' => env('DB_PORT', $urlParsed['port'] ?? '5432'),
+            'database' => env('DB_DATABASE', $urlParsed['database'] ?? 'forge'),
+            'username' => env('DB_USERNAME', $urlParsed['username'] ?? 'forge'),
+            'password' => env('DB_PASSWORD', $urlParsed['password'] ?? ''),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
@@ -88,8 +111,6 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
-            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
     ],
