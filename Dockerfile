@@ -34,5 +34,7 @@ RUN chmod -R 775 storage bootstrap/cache
 # Expose port (Railway butuh ini)
 EXPOSE 8080
 
+CMD sh -c "php artisan optimize:clear; php artisan migrate --force; php artisan serve --host=0.0.0.0 --port=8080"
+
 # Command untuk menjalankan server (PENTING! Dockerfile kamu sebelumnya gak punya ini)
 CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080
